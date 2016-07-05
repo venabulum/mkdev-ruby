@@ -1,34 +1,24 @@
 file_name = ARGV.first
 default_name = "movies.txt"
+file_name ||= default_name
 required = "Time"
 films = []
 
 # проверяем файл
-if file_name
-  if File.exist?(file_name)
-    data = file_name
-  else
-    puts "File doesn't exist."
+if File.exist?(file_name)
+  data = file_name
+# преобразуем строки из нашего файла в массив
+  out = open(data)
+  out.each_line do |lines|
+  films.push(lines.split('|'))
   end
 else
-  data = default_name 
+  puts "File doesn't exist."
 end
 
-# преобразуем строки из нашего файла в массив
-out = open(data)
-out.each_line do |lines|
-  films.push(lines.split('|'))
-end
-
-# проверяем, что в именах фильмов наличие required, и выводим имя\рейтинг таких фильмов
-i = 0
-while i < films.length do
-  if films[i][1].include?(required)
-    puts "Name: #{films[i][1]}"
-    rating = films[i][7].slice(2).to_i
-    print "Rating: "
-    rating.times {print "*"}
-    puts "\n"
+# если в именах фильмов присутствует required, выводим имя\рейтинг таких фильмов
+films.each do |elem|
+  if elem[1].include?(required)
+    puts "Film: #{elem[1]}\nRating: #{"*" * elem[7].slice(2).to_i}"
   end
-  i += 1
 end
