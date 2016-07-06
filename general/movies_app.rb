@@ -5,9 +5,13 @@ required = "Time"
 films = []
 
 # проверяем наличие файла и выходим, если он отсутствует
-File.exist?(file_name)? data = file_name : (puts "File doesn't exist."; exit)
+unless File.exist?(file_name)
+  puts "File doesn't exist."
+  exit
+end
 
 # преобразуем строки из нашего файла в массив
+data = file_name
 out = open(data)
 out.each_line do |lines|
   films.push(lines.split('|'))
