@@ -4,16 +4,13 @@ file_name ||= default_name
 required = "Time"
 films = []
 
-# проверяем файл
-if File.exist?(file_name)
-  data = file_name
+# проверяем наличие файла и выходим, если он отсутствует
+File.exist?(file_name)? data = file_name : (puts "File doesn't exist."; exit)
+
 # преобразуем строки из нашего файла в массив
-  out = open(data)
-  out.each_line do |lines|
+out = open(data)
+out.each_line do |lines|
   films.push(lines.split('|'))
-  end
-else
-  puts "File doesn't exist."
 end
 
 # если в именах фильмов присутствует required, выводим имя\рейтинг таких фильмов
