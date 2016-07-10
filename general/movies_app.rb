@@ -8,43 +8,38 @@ unless File.exist?(file_name)
   exit
 end
 
-# преобразуем строки из нашего файла в массив массивов фильмов
-data = file_name
-out = open(data)
-temp = out.map { |lines| lines.split('|') }
-
-# # преобразуем каждый массив с фильмом в словарь
-films = temp.map { |elem|
+# преобразуем строки из нашего файла в словарь фильмов
+films = open(file_name).map { |lines| lines.split('|') }.map { |attribute|
   {
-    url:      elem[0], 
-    name:     elem[1], 
-    year:     elem[2], 
-    country:  elem[3], 
-    date:     elem[4], 
-    genre:    elem[5], 
-    length:   elem[6], 
-    rating:   elem[7], 
-    director: elem[8], 
-    artist:   elem[9]
+    url:      attribute[0], 
+    name:     attribute[1], 
+    year:     attribute[2], 
+    country:  attribute[3], 
+    date:     attribute[4], 
+    genre:    attribute[5], 
+    length:   attribute[6], 
+    rating:   attribute[7], 
+    director: attribute[8], 
+    artist:   attribute[9]
   }
 }
 
 # сортируем массив словарей по длине фильма и отбираем 5 самых длинных
-longest_films = films.sort_by { |arr| arr[:length].to_i }.last(5)
+longest_films = films.sort_by { |film| film[:length].to_i }.last(5)
 
 # а теперь 10 самых первых по дате выхода комедий
-oldest_comedy = films.select { |gen| gen[:genre].include?("Comedy") }.sort_by { |old| old[:date] }.first(10)
+oldest_comedy = films.select { |film| film[:genre].include?("Comedy") }.sort_by { |film| film[:date] }.first(10)
 
 # составляем уникальный алфавитный список всех режиссеров
-directors = films.map { |dir| dir[:director] }.uniq.sort_by { |sort| sort.split(" ").last }
+directors = films.map { |film| film[:director] }.uniq.sort_by { |full_name| full_name.split(' ').last }
 
 # считаем, сколько фильмов снято не в США
-not_in_usa = films.reject { |cou| cou[:country].include?("USA") }.count
+not_in_usa = films.reject { |film| film[:country].include?("USA") }.count
 
 # красиво формируем информацию о фильме
 def beautiful(arr)
   arr.each { |i| 
-    puts "#{i[:name]} (#{i[:date]}; #{i[:genre]}) / #{i[:length]}" 
+    puts "#{i[:name]} (#{i[:date]}; #{i[:genre]}) / #{i[:length]}"
   }
 end
 
