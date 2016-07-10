@@ -9,20 +9,8 @@ unless File.exist?(file_name)
 end
 
 # преобразуем строки из нашего файла в словарь фильмов
-films = open(file_name).map { |lines| lines.split('|') }.map { |attribute|
-  {
-    url:      attribute[0], 
-    name:     attribute[1], 
-    year:     attribute[2], 
-    country:  attribute[3], 
-    date:     attribute[4], 
-    genre:    attribute[5], 
-    length:   attribute[6], 
-    rating:   attribute[7], 
-    director: attribute[8], 
-    artist:   attribute[9]
-  }
-}
+Keys = [:url, :name, :year, :country, :date, :genre, :length, :rating, :director, :artist] 
+films = open(file_name).map { |lines| lines.split('|') }.map { |value| Keys.zip(value).to_h }
 
 # сортируем массив словарей по длине фильма и отбираем 5 самых длинных
 longest_films = films.sort_by { |film| film[:length].to_i }.last(5)
@@ -33,7 +21,7 @@ oldest_comedy = films.select { |film| film[:genre].include?("Comedy") }.sort_by 
 # составляем уникальный алфавитный список всех режиссеров
 directors = films.map { |film| film[:director] }.uniq.sort_by { |full_name| full_name.split(' ').last }
 
-# считаем, сколько фильмов снято не в США
+# и считаем, сколько фильмов снято не в США
 not_in_usa = films.reject { |film| film[:country].include?("USA") }.count
 
 # красиво формируем информацию о фильме
