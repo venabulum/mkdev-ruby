@@ -9,8 +9,8 @@ unless File.exist?(file_name)
 end
 
 # преобразуем строки из нашего файла в словарь фильмов
-Keys = [:url, :name, :year, :country, :date, :genre, :length, :rating, :director, :artist] 
-films = open(file_name).map { |lines| lines.split('|') }.map { |value| Keys.zip(value).to_h }
+KEYS = [:url, :name, :year, :country, :date, :genre, :length, :rating, :director, :artist] 
+films = open(file_name).map { |lines| lines.split('|') }.map { |value| KEYS.zip(value).to_h }
 
 # сортируем массив словарей по длине фильма и отбираем 5 самых длинных
 longest_films = films.sort_by { |film| film[:length].to_i }.last(5)
