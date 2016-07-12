@@ -28,10 +28,6 @@ directors = films.map { |film| film.director }.uniq.sort_by { |full_name| full_n
 # считаем, сколько фильмов снято не в США
 not_in_usa = films.reject { |film| film.country.include?("USA") }.count
 
-# выводим статистику по месяцам — в каком сколько фильмов снято
-# stat = films.map { |film| film.date }.select { |date| date.length > 4 }.group_by { |date| date.split('-')[1] }
-stat = films.map { |film| film.date }.select { |date| date.length > 4 }.group_by { |date| Date._parse(date)[:mon] }
-
 # красиво формируем информацию о фильме
 def beautiful(arr)
   arr.each { |film| puts "#{film.name} (#{film.date}; #{film.genre}) / #{film.length}" }
@@ -56,15 +52,4 @@ puts "= = = SHOT NOT IN THE US = = ="
 puts  "#{not_in_usa} films out of 250"
 delimeter
 puts "= = = MONTHS STAT = = ="
-puts "#{stat[1].count} films was released in January"
-puts "#{stat[2].count} films was released in February"
-puts "#{stat[3].count} films was released in March"
-puts "#{stat[4].count} films was released in April"
-puts "#{stat[5].count} films was released in May"
-puts "#{stat[6].count} films was released in June"
-puts "#{stat[7].count} films was released in July"
-puts "#{stat[8].count} films was released in August"
-puts "#{stat[9].count} films was released in September"
-puts "#{stat[10].count} films was released in October"
-puts "#{stat[11].count} films was released in November"
-puts "#{stat[12].count} films was released in December"
+films.map { |film| film.date }.select { |date| date.length > 4 }.group_by { |date| Date._parse(date)[:mon] }.each { |month, films| puts "In #{month} month was released #{films.count} films" }
