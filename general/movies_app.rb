@@ -51,5 +51,7 @@ delimeter
 puts "= = = SHOT NOT IN THE US = = ="
 puts  "#{not_in_usa} films out of 250"
 delimeter
-puts "= = = MONTHS STAT = = ="
-films.map { |film| film.date }.select { |date| date.length > 4 }.group_by { |date| Date._parse(date)[:mon] }.each { |month, films| puts "In #{month} month was released #{films.count} films" }
+puts "= = = RELEASE STAT = = ="
+films.map { |film| film.date }.select { |date| date.length > 4 }
+  .group_by { |date| Date._parse(Date.strptime(date, '%Y-%m').to_s)[:mon] }.sort
+  .each { |month, films| puts "#{films.count} films was released in #{Date::MONTHNAMES[month]}" }
