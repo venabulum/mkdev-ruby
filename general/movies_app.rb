@@ -14,7 +14,8 @@ end
 
 # преобразуем строки из нашего файла в словарь фильмов
 KEYS = [:url, :name, :year, :country, :date, :genre, :length, :rating, :director, :artist]
-films = CSV.read(file_name, col_sep: '|').map { |value| OpenStruct.new(KEYS.zip(value).to_h) }
+films = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|')
+  .map { |value| OpenStruct.new(value.to_h) }
 
 # сортируем массив словарей по длине фильма и отбираем 5 самых длинных
 longest_films = films.sort_by { |film| film.length.to_i }.last(5)
