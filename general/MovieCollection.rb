@@ -5,6 +5,7 @@ require 'date'
 class MovieCollection
   
   KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors] 
+  attr_accessor :url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
 
   def initialize(file_name = ARGV.first)
     default_name = 'movies.txt'
@@ -16,7 +17,7 @@ class MovieCollection
     end
 
     @movies = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|').map { |value| OpenStruct.new(value.to_h) }
-    .each { |movie| Movie.new(movie.url, movie.title, movie.year, movie.country, movie.date, movie.genre, movie.length, movie.rating, movie.director, movie.actors) }
+    .map { |movie| Movie.new(movie.url, movie.title, movie.year, movie.country, movie.date, movie.genre, movie.length, movie.rating, movie.director, movie.actors) }
   end
 
   def all
@@ -27,8 +28,8 @@ class MovieCollection
     @movies.sort_by(&value)
   end
 
-  def filter(key)
-    # movies.filter(genre: 'Comedy') — возвращает массив фильмов с жанром «Comedy»;
+  def filter(hash)
+    @movies.select { |movies| movies.(hash.keys.first).include?(hash.values.first) }
   end
 
   def stats(key)
@@ -37,6 +38,7 @@ class MovieCollection
   end
 
   def to_s
+   "#{@movies}"
   end
 
 end
