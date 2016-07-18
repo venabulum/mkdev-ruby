@@ -28,12 +28,14 @@ class MovieCollection
   end
 
   def filter(hash)
-    @movies.select { |movies| movies.send(hash.keys.first).include?(hash.values.first) }
+    hash.map { |key, value| 
+      @movies.select { |movies| movies.send(key).include?(value.to_s) } 
+    }
   end
 
   def stats(value)
     @movies.group_by(&value)
-    .each { |key, quantity| puts "#{key}: #{quantity.count}" }
+    .map { |key, quantity| { key => quantity.count } }
   end
 
   def to_s
