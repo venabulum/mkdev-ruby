@@ -16,13 +16,12 @@ class Movie
   end
 
   def has_genre?(genre)
-    begin
-      @movies.map { |m| m.genre.include?(genre) }[0].empty?
-    rescue StandardError=>e
-      puts 'There is no such genre #{e}'
-    else
-      @genre.include?(genre)
-    end
+    throw :noGenre if @movies.map { |m| m.genre.include?(genre) }[0].empty?
+    @genre.include?(genre)
+  end
+
+  catch :noGenre do
+    puts "There is no such genre"
   end
 
   def to_s
