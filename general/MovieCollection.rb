@@ -5,7 +5,6 @@ require 'date'
 class MovieCollection
   
   KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors] 
-  attr_accessor :url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
 
   def initialize(file_name = ARGV.first)
     default_name = 'movies.txt'
@@ -16,8 +15,8 @@ class MovieCollection
       exit
     end
 
-    @movies = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|').map { |value| OpenStruct.new(value.to_h) }
-    .map { |movie| Movie.new(movie.url, movie.title, movie.year, movie.country, movie.date, movie.genre, movie.length, movie.rating, movie.director, movie.actors) }
+    @movies = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|').map(&:to_h)
+    .map { |m| Movie.new(m[:url], m[:title], m[:year], m[:country], m[:date], m[:genre], m[:length], m[:rating], m[:director], m[:actors]) }
   end
 
   def all
@@ -29,12 +28,12 @@ class MovieCollection
   end
 
   def filter(hash)
-    @movies.select { |movies| movies.(hash.keys.first).include?(hash.values.first) }
+    @movies.select { |movies| movies.send(hash.keys.first).include?(hash.values.first) }
   end
 
-  def stats(key)
-    # метод должен уметь выдать статистику по запросу: режиссёр, актёр, год, месяц, страна, жанр 
-    # например, movies.stats(:director) возвращает хеш «имя режиссёра → количество фильмов»
+  def stats(value)
+    @movies.group_by(&value)
+    .each { |key, quantity| puts "#{key}: #{quantity.count}" }
   end
 
   def to_s

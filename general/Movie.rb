@@ -17,14 +17,14 @@ class Movie
 
   def has_genre?(genre)
     if @genre.include?(genre)
-      "#{@genre} - TRUE"
+      true
     else
-      "#{@genre} - FALSE"
+      false
     end
   end
 
   def to_s
-    "#{@title} (#{@year}, #{@country}) / #{@genre} / #{@director} / #{@actors} (#{@rating})"
+    "#{@title} (#{@date}, #{@country}) / #{@genre} / #{@director} / #{@actors} (#{@rating})"
   end
 
 end
