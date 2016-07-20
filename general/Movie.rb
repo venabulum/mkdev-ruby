@@ -1,8 +1,9 @@
 class Movie
 
-  attr_accessor :url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
+  attr_accessor :movies, :url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
 
-  def initialize(url, title, year, country, date, genre, length, rating, director, actors)
+  def initialize(movies, url, title, year, country, date, genre, length, rating, director, actors)
+    @movies     = movies
     @url        = url     
     @title      = title   
     @year       = year    
@@ -16,12 +17,13 @@ class Movie
   end
 
   def has_genre?(genre)
-    throw :noGenre if @movies.map { |m| m.genre.include?(genre) }[0].empty?
-    @genre.include?(genre)
-  end
-
-  catch :noGenre do
-    puts "There is no such genre"
+    begin
+      raise unless movies.genre_exists?(genre)
+    rescue
+      "'#{genre}' genre does not exist."
+    else
+      @genre.include?(genre)
+    end
   end
 
   def to_s

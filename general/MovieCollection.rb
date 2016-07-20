@@ -1,10 +1,8 @@
 require 'csv'
-require 'ostruct'
-require 'date'
 
 class MovieCollection
   
-  KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors] 
+  KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors]
 
   def initialize(file_name = ARGV.first)
     default_name = 'movies.txt'
@@ -16,7 +14,7 @@ class MovieCollection
     end
 
     @movies = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|').map(&:to_h)
-    .map { |m| Movie.new(m[:url], m[:title], m[:year], m[:country], m[:date], m[:genre], m[:length], m[:rating], m[:director], m[:actors]) }
+    .map { |m| Movie.new(self, m[:url], m[:title], m[:year], m[:country], m[:date], m[:genre], m[:length], m[:rating], m[:director], m[:actors]) }
   end
 
   def all
@@ -27,19 +25,25 @@ class MovieCollection
     @movies.sort_by(&value)
   end
 
-  def filter(hash)
-    hash.map { |key, value| 
-      @movies.select { |movies| movies.send(key).include?(value.to_s) } 
-    }
+  def filter(filters)
+    result = @movies
+    filters.map { |key, value|
+      result = result.select {|movies| movies.send(key).include?(value.to_s)}
+      }
+      return result
   end
 
   def stats(value)
     @movies.group_by(&value)
-    .map { |key, quantity| { key => quantity.count } }
+    .map { |key, movies| { key => movies.count } }
   end
 
   def to_s
    "#{@movies}"
+  end
+
+  def genre_exists?(genre)
+    @movies.map { |movies| movies.genre }.include?(genre)
   end
 
 end
