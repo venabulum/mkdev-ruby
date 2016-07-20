@@ -11,8 +11,13 @@ puts movies.all.first(5).map(&:genre)
 puts movies.sort_by(:genre)
 puts movies.sort_by(:year)
 
-puts movies.all.first.has_genre?('Drama')
-puts movies.all.first.has_genre?('Cococo')
+begin
+  puts movies.all.first.has_genre?('Comedy')
+  puts movies.all.first.has_genre?('Drama')
+  puts movies.all.first.has_genre?('Cococo')
+rescue Exception => error
+  puts error
+end
 
 puts movies.filter(genre: 'Comedy')
 puts movies.filter(actors: 'Hanks', genre: 'Comedy', year: 2010)

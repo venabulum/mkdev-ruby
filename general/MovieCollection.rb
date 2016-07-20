@@ -15,6 +15,7 @@ class MovieCollection
 
     @movies = CSV.read(file_name, write_headers: true, headers: KEYS, col_sep: '|').map(&:to_h)
     .map { |m| Movie.new(self, m[:url], m[:title], m[:year], m[:country], m[:date], m[:genre], m[:length], m[:rating], m[:director], m[:actors]) }
+    @all_genres = @movies.map(&:genre)
   end
 
   def all
@@ -26,11 +27,8 @@ class MovieCollection
   end
 
   def filter(filters)
-    result = @movies
-    filters.map { |key, value|
-      result = result.select {|movies| movies.send(key).include?(value.to_s)}
-      }
-      return result
+    filters.reduce(@movies) { |result, (key, value)|
+    result.select {|movies| movies.send(key).include?(value.to_s) } }
   end
 
   def stats(value)
@@ -43,7 +41,7 @@ class MovieCollection
   end
 
   def genre_exists?(genre)
-    @movies.map { |movies| movies.genre }.include?(genre)
+    @all_genres.include?(genre)
   end
 
 end
