@@ -26,14 +26,9 @@ class MovieCollection
     @movies.sort_by(&value)
   end
 
-  def filter(filters)
-    filters.reduce(@movies) { |result, (key, value)|
-    result.select {|movies| movies.send(key).include?(value.to_s) } }
-  end
-
   def stats(value)
-    @movies.group_by(&value)
-    .map { |key, movies| { key => movies.count } }
+    @movies.map(&value).flatten
+    .group_by { |value| value }.map { |k, v| { k => v.count } }
   end
 
   def to_s
@@ -42,6 +37,11 @@ class MovieCollection
 
   def genre_exists?(genre)
     @all_genres.include?(genre)
+  end
+
+  def filter(filters)
+    filters.reduce(@movies) { |result, (key, value)|
+    result.select {|movies| movies.match?(key, value) } }
   end
 
 end

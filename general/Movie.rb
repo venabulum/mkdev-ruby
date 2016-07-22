@@ -4,16 +4,16 @@ class Movie
 
   def initialize(movies, url, title, year, country, date, genre, length, rating, director, actors)
     @movies     = movies
-    @url        = url     
-    @title      = title   
-    @year       = year    
-    @country    = country 
-    @date       = date    
-    @genre      = genre   
-    @length     = length  
-    @rating     = rating  
+    @url        = url
+    @title      = title
+    @year       = year.to_i
+    @country    = country
+    @date       = date
+    @genre      = genre.split(',')
+    @length     = length
+    @rating     = rating
     @director   = director
-    @actors     = actors
+    @actors     = actors.split(',')
   end
 
   def has_genre?(genre)
@@ -22,7 +22,16 @@ class Movie
   end
 
   def to_s
-    "#{@title} (#{@date}, #{@country}) / #{@genre} / #{@director} / #{@actors} (#{@rating})"
+    "#{@title} (#{@date}, #{@country}) / #{@genre.join(", ")} / #{@director} / #{@actors.join(", ")} (#{@rating})"
+  end
+
+  def match?(field, filter)
+    field_value = self.send(field)
+    if field_value.is_a?(Array)
+      field_value.any? { |field| filter === field }
+    else
+      filter === field_value
+    end
   end
 
 end
