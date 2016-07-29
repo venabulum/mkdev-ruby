@@ -44,4 +44,8 @@ class MovieCollection
     result.select {|movies| movies.match?(key, value) } }
   end
 
+  def randomaizer(movies)
+    # weighted random depending on the movies rating
+  end
+
 end
